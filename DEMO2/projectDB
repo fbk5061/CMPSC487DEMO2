@@ -1,0 +1,43 @@
+CREATE TABLE IF NOT EXISTS User(
+	id				integer 	AUTOINCREMENT PRIMARY KEY,
+	name			text 			PRIMARY KEY,
+	password	text			NOT NULL,
+	userType	text 			CHECK(userType = "Admin" OR userType = "Faculty" OR userType = "Customer")
+);
+
+CREATE TABLE IF NOT EXISTS Admin(
+	id				integer		PRIMARY KEY,
+	name			text			PRIMARY KEY,
+	password	text			NOT NULL,
+	userType	text			NOT NULL,
+	FOREIGN KEY (id) 		REFERENCES User (id),
+	FOREIGN KEY (name) 	REFERENCES User (name)
+);
+
+CREATE TABLE IF NOT EXISTS Faculty(
+	id				integer		PRIMARY KEY,
+	name			text			PRIMARY KEY,
+	password	text			NOT NULL,
+	userType	text			NOT NULL,
+	FOREIGN KEY (id,) 	REFERENCES User (id),
+	FOREIGN KEY (name) 	REFERENCES User (name)
+);
+
+CREATE TABLE IF NOT EXISTS Customer(
+	id				integer		PRIMARY KEY,
+	name			text			PRIMARY KEY,
+	password	text			NOT NULL,
+	userType	text			NOT NULL,
+	startDate	text			CHECK(startDate IS strftime('%Y-%m-%d', startDate)),
+	endDate		text			CHECK(endDate IS strftime('%Y-%m-%d', endDate)),
+	roomType	text			NOT NULL,
+	FOREIGN KEY (id)			 REFERENCES User (id),
+	FOREIGN KEY (name) 		 REFERENCES User (name),
+	FOREIGN KEY	(roomType) REFERENCES roomType(type)
+);
+
+CREATE TABLE IF NOT EXISTS roomType(
+	type			text		PRIMARY KEY CHECK('two-double' OR 'two-queen' OR 'queen' OR 'king' OR 'suite'),
+	price			real		NOT NULL,
+	quantity	integer	NOT NULL
+);

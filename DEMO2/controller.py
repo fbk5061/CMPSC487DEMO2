@@ -1,5 +1,7 @@
 from bottle import route, run, get, post, static_file, request, redirect
-#from cork import Cork
+import sqlite3
+from sqlite3 import Error
+
 
 class User:
     def __init__(self, username, password, rank):
@@ -10,6 +12,22 @@ validusers = [User("admin", "password", "admin"), User("user", "pass", "client")
 openDates = []
 
 user = "";
+dbfile = "pythonsqlite.db"
+def create_connection(db_file):
+    """ create a database connection to the SQLite database
+        specified by db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except Error as e:
+        print(e)
+    print(conn)
+    return conn
+
 
 #Get all availible dates
 filepath = ''
@@ -52,17 +70,42 @@ def inputlogin():
     user = validateUser(User(username, password, ""))
     redirect('/')
 
+@get('/users')
+def admin():
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "Select * from User"
+    returnval = cur.execute(sql)
+    cur.close()
+    conn.close()
+    return returnval
+
 @get('/user/new')
 def newUser():
     return static_file("newuser.html", root = '')
 
 @post('/user/new')
 def inputNewUser():
-    Fname = request.forms.get('Fname')
-    Lname = request.forms.get('Lname')
+    Name = request.forms.get('Name')
+    Rank = request.forms.get('Rank')
     Email = request.forms.get('Email')
     Password = request.forms.get('Password')
+    print(Name)
+    print(Password)
+    print(Rank)
     validusers.append(User(Email, Password, ""))
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "INSERT INTO User(name, password, userType) VALUES (?,?,?)"
+    task = (Name, Password, Rank)
+    try:
+        cur.execute(sql, task)
+        conn.commit()
+    except Error as e:
+        cur.close()
+        conn.close()
+        print(e)
+        redirect("/user/new")
     redirect("/")
 
 @get('/booking')
@@ -94,7 +137,4 @@ def inputhome():
             Lname = request.forms.get('Lname')
             Email = request.forms.get('Email')
 
-@get('/user')
-def admin():
-    return user
 run(host='localhost', port=8080, debug=True)
