@@ -15,41 +15,39 @@
   <div class="jumbotron mt-3 text-center">
   <h1 class="display-4">Welcome to Hotel!</h1>
 </div>
-	<form>
+	<form class = "" action="/booking" method="post">
 	<div>
 		<span>
 		<div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon1">Name</span>
   </div>
-	<input type="text" !important" class="form-control" id="user" aria-describedby="Your Name">
+	<input type="text" class="form-control" name="name" aria-describedby="Your Name" required>
 </div>
-	</span>
-	<span>
 		<div>
 		<span>
 		<div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon1">Start Day</span>
   </div>
-	<input type="date" class="form-control" id="user" aria-describedby="Your Name">
+	<input type="date" class="form-control" name="startDate" aria-describedby="Your Name" required>
 </div>
 		<div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon1">End Day</span>
   </div>
-	<input type="date" class="form-control" id="user" aria-describedby="Your Name">
+	<input type="date" class="form-control" name="EndDate" aria-describedby="Your Name" required>
 </div>
 		<div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon1">Room Type</span>
   </div>
-	  <select class="form form-control">
-	  <option>Two Twin Beds Rate - $65.75</option>
-	  <option>Two Queen Beds Rate - $65.75</option>
-	  <option>One Queen Bed Rate - $65.75</option>
-	  <option>One King Bed Rate - $65.75</option>
-	  <option>Suite Rate - $113.43</option>
+	  <select class="form form-control" name="roomType">
+	  <option value="Two-Twin" >Two Twin Beds Rate - $65.75</option>
+	  <option value="Two-Queen">Two Queen Beds Rate - $65.75</option>
+	  <option value="One-Queen">One Queen Bed Rate - $65.75</option>
+	  <option value="One-King">One King Bed Rate - $65.75</option>
+	  <option value="Suite">Suite Rate - $113.43</option>
 	  </select>
 </div>
 

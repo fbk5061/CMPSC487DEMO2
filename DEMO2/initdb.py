@@ -59,21 +59,20 @@ def main():
 );
     """
 
-    table4 = """CREATE TABLE IF NOT EXISTS Customer(
+    table4 = """CREATE TABLE IF NOT EXISTS Reservations(
 	id			integer		    PRIMARY KEY,
-	name		text			NOT NULL,
-	password	text			NOT NULL,
-	userType	text			NOT NULL,
+    customerId  integer         not NULL,
 	startDate	text			CHECK(startDate IS strftime('%Y-%m-%d', startDate)),
 	endDate		text			CHECK(endDate IS strftime('%Y-%m-%d', endDate)),
 	roomType	text			NOT NULL,
-	FOREIGN KEY (id) REFERENCES User (id),
+	FOREIGN KEY (customerId) REFERENCES User (id),
 	FOREIGN KEY	(roomType) REFERENCES roomType(type)
 );
         """
 
     table5 = """CREATE TABLE IF NOT EXISTS roomType(
-	type			text		PRIMARY KEY CHECK('two-double' OR 'two-queen' OR 'queen' OR 'king' OR 'suite'),
+	type			text		PRIMARY KEY
+        CHECK(type = "double-full" OR type = "double-queen" OR type = "queen" OR type = "king" OR type = "suite"),
 	price			real		NOT NULL,
 	quantity	integer	NOT NULL
 );
@@ -86,8 +85,8 @@ def main():
     if conn is not None:
         # create projects table
         create_table(conn, table1)
-        create_table(conn, table2)
-        create_table(conn, table3)
+        #create_table(conn, table2)
+        #create_table(conn, table3)
         create_table(conn, table4)
         create_table(conn, table5)
 

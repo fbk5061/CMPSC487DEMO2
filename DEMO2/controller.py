@@ -1,13 +1,16 @@
+#import bottle
 from bottle import route, run, get, post, static_file, request, redirect
 import sqlite3
 from sqlite3 import Error
-
+from cork import Cork
+import simplejson as json
 
 class User:
     def __init__(self, username, password, rank):
         self.username = username
         self.password = password
         self.rank = rank
+
 validusers = [User("admin", "password", "admin"), User("user", "pass", "client")]
 openDates = []
 
@@ -72,13 +75,20 @@ def inputlogin():
 
 @get('/users')
 def admin():
+    returnval = []
     conn = create_connection(dbfile)
     cur = conn.cursor()
     sql = "Select * from User"
-    returnval = cur.execute(sql)
+    cur.execute(sql)
+    data = cur.fetchall()
     cur.close()
     conn.close()
-    return returnval
+    for user in data:
+        returnval.append({"id": user[0],
+                        "name": user[1],
+                        "password": user[2],
+                        "userType": user[3]})
+    return json.dumps(returnval)
 
 @get('/user/new')
 def newUser():
@@ -88,12 +98,7 @@ def newUser():
 def inputNewUser():
     Name = request.forms.get('Name')
     Rank = request.forms.get('Rank')
-    Email = request.forms.get('Email')
     Password = request.forms.get('Password')
-    print(Name)
-    print(Password)
-    print(Rank)
-    validusers.append(User(Email, Password, ""))
     conn = create_connection(dbfile)
     cur = conn.cursor()
     sql = "INSERT INTO User(name, password, userType) VALUES (?,?,?)"
@@ -102,10 +107,11 @@ def inputNewUser():
         cur.execute(sql, task)
         conn.commit()
     except Error as e:
-        cur.close()
-        conn.close()
         print(e)
         redirect("/user/new")
+    finally:
+        cur.close()
+        conn.close()
     redirect("/")
 
 @get('/booking')
@@ -114,7 +120,23 @@ def booking():
 
 @post('/booking')
 def inputbooking():
-    return "TODO"
+    Name = request.forms.get('Name')
+    StartDate = request.forms.get('startDate')
+    EndDate = request.forms.get('endDate')
+    RoomType = request.forms.get('roomType')
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "INSERT INTO Reservations(name, customerId, startDate, endDate, roomType) VALUES (?,?,?)"
+    task = (Name, 1, StartDate, EndDate, RoomType)
+    try:
+        cur.execute(sql, task)
+        conn.commit()
+    except Error as e:
+        cur.close()
+        conn.close()
+        print(e)
+        redirect("/booking")
+    redirect("/")
 
 @get('/dates/available')
 def showDates():
