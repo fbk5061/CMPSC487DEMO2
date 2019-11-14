@@ -4,6 +4,7 @@ import sqlite3
 from sqlite3 import Error
 from cork import Cork
 import simplejson as json
+import datetime
 
 class User:
     def __init__(self, username, password, rank):
@@ -73,8 +74,8 @@ def inputlogin():
     user = validateUser(User(username, password, ""))
     redirect('/')
 
-@get('/users')
-def admin():
+@get('/json/users')
+def getAllUsers():
     returnval = []
     conn = create_connection(dbfile)
     cur = conn.cursor()
@@ -89,6 +90,22 @@ def admin():
                         "password": user[2],
                         "userType": user[3]})
     return json.dumps(returnval)
+
+@get('/json/user/<id>')
+def getUserById(id):
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "Select * from User where id = " + id
+    cur.execute(sql)
+    data = cur.fetchone()
+    cur.close()
+    conn.close()
+    returnval = {"id": data[0],
+                    "name": data[1],
+                    "password": data[2],
+                    "userType": data[3]}
+    return json.dumps(returnval)
+
 
 @get('/user/new')
 def newUser():
@@ -120,14 +137,14 @@ def booking():
 
 @post('/booking')
 def inputbooking():
-    Name = request.forms.get('Name')
+    Name = request.forms.get('name')
     StartDate = request.forms.get('startDate')
     EndDate = request.forms.get('endDate')
     RoomType = request.forms.get('roomType')
     conn = create_connection(dbfile)
     cur = conn.cursor()
-    sql = "INSERT INTO Reservations(name, customerId, startDate, endDate, roomType) VALUES (?,?,?)"
-    task = (Name, 1, StartDate, EndDate, RoomType)
+    sql = "INSERT INTO Reservations(customerId, startDate, endDate, roomType) VALUES (?,?,?,?)"
+    task = (Name, StartDate, EndDate, RoomType)
     try:
         cur.execute(sql, task)
         conn.commit()
@@ -137,6 +154,89 @@ def inputbooking():
         print(e)
         redirect("/booking")
     redirect("/")
+
+@get('/json/booking')
+def jsonAllReservations():
+    thisreturnval = []
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "Select * from Reservations"
+    cur.execute(sql)
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    for piece in data:
+        #customer = json.loads(getUserById(str(piece[0])))
+        thisreturnval.append({"id": piece[0],
+                        "customerId": piece[1],
+                        "startDate": piece[2],
+                        "endDate": piece[3],
+                        "roomType": piece[4]})
+    return json.dumps(thisreturnval)
+
+@get('/json/booking/future')
+def jsonAllReservations():
+    now = datetime.datetime.now()
+    thisreturnval = []
+    print(now)
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "Select * from Reservations where startDate > DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"');"
+    cur.execute(sql)
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    for piece in data:
+        #customer = json.loads(getUserById(str(piece[0])))
+        thisreturnval.append({"id": piece[0],
+                        "customerId": piece[1],
+                        "startDate": piece[2],
+                        "endDate": piece[3],
+                        "roomType": piece[4]})
+    return json.dumps(thisreturnval)
+
+@get('/json/booking/current')
+def jsonAllReservations():
+    now = datetime.datetime.now()
+    thisreturnval = []
+    print(now)
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "Select * from Reservations where startDate <= DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"') and endDate >= DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"');"
+    cur.execute(sql)
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    for piece in data:
+        #customer = json.loads(getUserById(str(piece[0])))
+        thisreturnval.append({"id": piece[0],
+                        "customerId": piece[1],
+                        "startDate": piece[2],
+                        "endDate": piece[3],
+                        "roomType": piece[4]})
+    return json.dumps(thisreturnval)
+
+@get('/json/booking/past')
+def jsonAllReservations():
+    now = datetime.datetime.now()
+    thisreturnval = []
+    print(now)
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "Select * from Reservations where endDate < DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"');"
+    cur.execute(sql)
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    for piece in data:
+        #customer = json.loads(getUserById(str(piece[0])))
+        thisreturnval.append({"id": piece[0],
+                        "customerId": piece[1],
+                        "startDate": piece[2],
+                        "endDate": piece[3],
+                        "roomType": piece[4]})
+    return json.dumps(thisreturnval)
+
 
 @get('/dates/available')
 def showDates():
