@@ -60,11 +60,11 @@ def checkIfValidDate():
 
 @get('/')
 def default():
-    return static_file("default.html", root = '')
+    return static_file("default.html", root = 'HTML/')
 
 @get('/login')
 def login():
-    return static_file("login.html", root='')
+    return static_file("login.html", root='HTML/')
 
 @post('/login')
 def inputlogin():
@@ -109,7 +109,7 @@ def getUserById(id):
 
 @get('/user/new')
 def newUser():
-    return static_file("newuser.html", root = '')
+    return static_file("newuser.html", root = 'HTML/')
 
 @post('/user/new')
 def inputNewUser():
@@ -133,7 +133,7 @@ def inputNewUser():
 
 @get('/booking')
 def booking():
-    return static_file("booking.html", root='')
+    return static_file("booking.html", root='HTML/')
 
 @post('/booking')
 def inputbooking():
@@ -248,7 +248,7 @@ def showDates():
 @get('/register')
 def home():
     if user is not "":
-        return static_file("table.html", root='')
+        return static_file("table.html", root='HTML/')
     else:
         redirect("/login")
 
