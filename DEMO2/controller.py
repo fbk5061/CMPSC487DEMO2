@@ -5,12 +5,15 @@ from sqlite3 import Error
 from cork import Cork
 import simplejson as json
 import datetime
+#from cork.backend import SQLiteBackend
 
 class User:
     def __init__(self, username, password, rank):
         self.username = username
         self.password = password
         self.rank = rank
+#SQBackend = SQLiteBackend('pythonsqlite.db')
+#aaa = Cork(backend = SQBackend)
 
 validusers = [User("admin", "password", "admin"), User("user", "pass", "client")]
 openDates = []
@@ -31,17 +34,6 @@ def create_connection(db_file):
         print(e)
     print(conn)
     return conn
-
-
-#Get all availible dates
-filepath = ''
-with open("NOV_Avail_Dates", "r") as fp:
-    line = fp.readline()
-    openDates.append(line)
-    while line:
-    	line = fp.readline()
-    	openDates.append(line);
-
 
 def validateUser(attemptedLogin):
     for user in validusers:
