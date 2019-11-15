@@ -19,7 +19,7 @@ validusers = [User("admin", "password", "admin"), User("user", "pass", "client")
 openDates = []
 
 user = "";
-dbfile = "pythonsqlite.db"
+dbfile = "pythonsqlite.db"  #NAME OF DB FILE
 def create_connection(db_file):
     """ create a database connection to the SQLite database
         specified by db_file
@@ -32,7 +32,6 @@ def create_connection(db_file):
         return conn
     except Error as e:
         print(e)
-    print(conn)
     return conn
 
 def validateUser(attemptedLogin):
@@ -53,6 +52,10 @@ def checkIfValidDate():
 @get('/')
 def default():
     return static_file("default.html", root = 'HTML/')
+
+@get('/table')
+def default():
+    return static_file("table.html", root = 'HTML/')
 
 @get('/login')
 def login():
