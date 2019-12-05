@@ -58,7 +58,7 @@ def isFaculty():
 # checks to see if the user is logged in
 def isLoggedIn():
     sessioncreate()
-    print(session)
+    #print(session)
     if session.get('logged_in') is True:
         return True
     else:
@@ -70,6 +70,7 @@ def requireLogin(returnval):
     if isLoggedIn():
         return app.send_static_file(returnval)
     else:
+        session['returnvalue'] = returnval
         return redirect('/login')
 
 #
@@ -78,7 +79,6 @@ def requireLogin(returnval):
 @app.route('/')
 def redirectfromdefaultpage():
     return redirect('/home')
-
 
 @app.route('/home')
 def home():
@@ -117,7 +117,6 @@ def logout():
 #   Post Methods
 #
 
-
 @app.route('/login', methods=['POST'])
 def dologin():
     username = request.form['username']
@@ -131,30 +130,55 @@ def dologin():
     cur.close()
     conn.close()
 
+    if data is None:
+        flash('wrong password')
+        return redirect("/login")
+
     if data[0] > 0:
         session['logged_in'] = True
         session['id'] = data[0]
         session['username'] = username
         session['rank'] = data[3]
-        return redirect("/table")
+        returnval = session['returnvalue']
+        session['returnval'] = ""
+        if returnval is None:
+            return app.send_static_file('/')
+        if returnval is "":
+            return app.send_static_file('/')
+        return app.send_static_file(returnval)
     else:
         flash('wrong password')
         return redirect("/login")
 
 
-@app.route('/register', methods=['POST'])
-def inputhome():
-    if user is not "":
-            Fname = request.forms.get('Fname')
-            Lname = request.forms.get('Lname')
-            Email = request.forms.get('Email')
+@app.route('/booking', methods=['POST'])
+def inputbooking():
+    if not isLoggedIn():
+        return redirect('/login')
+    Name = session.get('id')
+    StartDate = request.form['startDate']
+    EndDate = request.form['endDate']
+    RoomType = request.form['roomType']
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "INSERT INTO Reservations(customerId, startDate, endDate, roomType) VALUES (?,?,?,?)"
+    task = (Name, StartDate, EndDate, RoomType)
+    try:
+        cur.execute(sql, task)
+        conn.commit()
+    except Error as e:
+        cur.close()
+        conn.close()
+        print(e)
+        return redirect("/booking")
+    return redirect("/")
 
 
 @app.route('/user/new', methods=['POST'])
 def inputNewUser():
-    Name = request.forms.get('Name')
-    Rank = request.forms.get('Rank')
-    Password = request.forms.get('Password')
+    Name = request.form['Name']
+    Rank = request.form['Rank']
+    Password = request.form['Password']
     conn = create_connection(dbfile)
     cur = conn.cursor()
     sql = "INSERT INTO User(name, password, userType) VALUES (?,?,?)"
@@ -164,11 +188,11 @@ def inputNewUser():
         conn.commit()
     except Error as e:
         print(e)
-        redirect("/user/new")
+        return redirect("/user/new")
     finally:
         cur.close()
         conn.close()
-    redirect("/")
+    return redirect("/")
 
 #
 #   Json routes -> to be changed to be more secure eventually
@@ -205,26 +229,6 @@ def getUserById(id):
                     "password": data[2],
                     "userType": data[3]}
     return json.dumps(returnval)
-
-@app.route('/booking', methods=['POST'])
-def inputbooking():
-    Name = request.forms.get('name')
-    StartDate = request.forms.get('startDate')
-    EndDate = request.forms.get('endDate')
-    RoomType = request.forms.get('roomType')
-    conn = create_connection(dbfile)
-    cur = conn.cursor()
-    sql = "INSERT INTO Reservations(customerId, startDate, endDate, roomType) VALUES (?,?,?,?)"
-    task = (Name, StartDate, EndDate, RoomType)
-    try:
-        cur.execute(sql, task)
-        conn.commit()
-    except Error as e:
-        cur.close()
-        conn.close()
-        print(e)
-        redirect("/booking")
-    redirect("/")
 
 @app.route('/json/booking')
 def jsonAllReservations():
