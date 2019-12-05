@@ -3,14 +3,18 @@ from flask import *
 import sqlite3
 from sqlite3 import Error
 from sqlalchemy import *
+from sqlalchemy.orm import sessionmaker
+from tabledef import *
+import os
 import simplejson as json
 import datetime
 
-openDates = []
 engine = create_engine('sqlite:///pythonsqlite.db', echo = True)
 app = Flask(__name__)
 
-user = "";
+Session = sessionmaker(bind=engine)
+s = Session()
+
 dbfile = "pythonsqlite.db"  #NAME OF DB FILE
 def create_connection(db_file):
     """ create a database connection to the SQLite database
@@ -32,7 +36,10 @@ def home():
 
 @app.route('/table')
 def table():
-    return app.send_static_file("table.html")
+    if session.get('logged_in') == False:
+        return login()
+    else:
+        return app.send_static_file("table.html")
 
 @app.route('/login')
 def login():
@@ -40,23 +47,38 @@ def login():
 
 @app.route('/login', methods=['POST'])
 def dologin():
-    username = request.forms.get('username')
-    password = request.forms.get('password')
+    username = request.form['username']
+    password = request.form['password']
 
-    Session = sessionmaker(bind=engine)
-    s = Session()
-    query = s.query(User).filter(User.name.in_([username]), User.password)
+    query = s.query(User).filter(User.name.in_([username]), User.password.in_([password]))
     result = query.first()
     if result:
+        conn = create_connection(dbfile)
+        cur = conn.cursor()
+        sql = "Select * from User where name = '" + username + "'"
+        cur.execute(sql)
+        data = cur.fetchone()
+        cur.close()
+        conn.close()
         session['logged_in'] = True
+        session['username'] = username
+        session['rank'] = data[3]
+        return table()
     else:
         flash('wrong password')
-    redirect('/')
+        return login()
 
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
+    session['username'] = ""
+    session['rank'] = ""
     return home()
+
+@app.route("/session")
+def testroute():
+    print(session)
+    return "HI"
 
 @app.route('/json/users')
 def getAllUsers():
@@ -221,20 +243,12 @@ def jsonReservationsPast():
                         "roomType": piece[4]})
     return json.dumps(thisreturnval)
 
-
-@app.route('/dates/available')
-def showDates():
-    string = ""
-    for date in openDates:
-        string += "<div>" + date + "</div>"
-    return string
-
 @app.route('/register')
 def signup():
     if user is not "":
-        return app.send_static_file("table.html")
+        return table()
     else:
-        redirect("/login")
+        login()
 
 @app.route('/register', methods=['POST'])
 def inputhome():
@@ -243,4 +257,6 @@ def inputhome():
             Lname = request.forms.get('Lname')
             Email = request.forms.get('Email')
 
+
+app.secret_key = os.urandom(12)
 app.run(host='localhost', port=8080, debug=True)
