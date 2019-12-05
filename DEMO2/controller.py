@@ -2,20 +2,18 @@ from flask import Flask, request
 from flask import *
 import sqlite3
 from sqlite3 import Error
-#from sqlalchemy import *
-#from sqlalchemy.orm import sessionmaker
-#from tabledef import *
 import os
 import simplejson as json
 import datetime
 
-#engine = create_engine('sqlite:///pythonsqlite.db', echo = True)
 app = Flask(__name__)
-
-#Session = sessionmaker(bind=engine)
-#s = Session()
-
 dbfile = "pythonsqlite.db"  #NAME OF DB FILE
+
+#
+#   Various functions that help the below methods
+#
+
+
 def create_connection(db_file):
     """ create a database connection to the SQLite database
         specified by db_file
@@ -33,36 +31,92 @@ def create_connection(db_file):
 #This will initilize the session cookie with values that are logged in
 def sessioncreate():
     if session.get('logged_in') is False:
-        print(session)
         return ""
     elif session.get('logged_in') is True:
-        print(session)
         return ""
     else:
         session['logged_in'] = False
         session['id'] = -1
         session['username'] = ""
         session['rank'] = ""
-        print(session)
     return ""
 
-@app.route('/')
-def home():
+def isAdmin():
+    value = session.get('rank')
+    if value is "Admin":
+        return True
+    else:
+        return False
+
+def isFaculty():
+    value = session.get('rank')
+    if value is "Faculty":
+        return True
+    else:
+        return False
+
+# checks to see if the user is logged in
+def isLoggedIn():
     sessioncreate()
+    print(session)
+    if session.get('logged_in') is True:
+        return True
+    else:
+        return False
+
+#if user is logged in, will return the file they want
+#otherwise, redirects to login page, and will redirect to page they request when done
+def requireLogin(returnval):
+    if isLoggedIn():
+        return app.send_static_file(returnval)
+    else:
+        return redirect('/login')
+
+#
+# STATIC PAGES
+#
+@app.route('/')
+def redirectfromdefaultpage():
+    return redirect('/home')
+
+
+@app.route('/home')
+def home():
     return app.send_static_file("default.html")
 
 @app.route('/table')
 def table():
-    sessioncreate()
-    if session.get('logged_in') == False:
-        return redirect("login")
-    else:
-        return app.send_static_file("table.html")
+    return requireLogin("table.html")
 
 @app.route('/login')
 def login():
-    sessioncreate()
     return app.send_static_file("login.html")
+
+@app.route('/booking')
+def booking():
+    return requireLogin("booking.html")
+
+@app.route('/user/new')
+def newUser():
+    return app.send_static_file("newuser.html")
+
+#
+#   Logout
+#
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    session['id'] = -1
+    session['username'] = ""
+    session['rank'] = ""
+    return redirect("/")
+
+
+#
+#   Post Methods
+#
+
 
 @app.route('/login', methods=['POST'])
 def dologin():
@@ -87,18 +141,38 @@ def dologin():
         flash('wrong password')
         return redirect("/login")
 
-@app.route("/logout")
-def logout():
-    session['logged_in'] = False
-    session['id'] = -1
-    session['username'] = ""
-    session['rank'] = ""
-    return redirect("/")
 
-@app.route("/session")
-def testroute():
-    print(session)
-    return ""
+@app.route('/register', methods=['POST'])
+def inputhome():
+    if user is not "":
+            Fname = request.forms.get('Fname')
+            Lname = request.forms.get('Lname')
+            Email = request.forms.get('Email')
+
+
+@app.route('/user/new', methods=['POST'])
+def inputNewUser():
+    Name = request.forms.get('Name')
+    Rank = request.forms.get('Rank')
+    Password = request.forms.get('Password')
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "INSERT INTO User(name, password, userType) VALUES (?,?,?)"
+    task = (Name, Password, Rank)
+    try:
+        cur.execute(sql, task)
+        conn.commit()
+    except Error as e:
+        print(e)
+        redirect("/user/new")
+    finally:
+        cur.close()
+        conn.close()
+    redirect("/")
+
+#
+#   Json routes -> to be changed to be more secure eventually
+#
 
 @app.route('/json/users')
 def getAllUsers():
@@ -131,35 +205,6 @@ def getUserById(id):
                     "password": data[2],
                     "userType": data[3]}
     return json.dumps(returnval)
-
-
-@app.route('/user/new')
-def newUser():
-    return app.send_static_file("newuser.html")
-
-@app.route('/user/new', methods=['POST'])
-def inputNewUser():
-    Name = request.forms.get('Name')
-    Rank = request.forms.get('Rank')
-    Password = request.forms.get('Password')
-    conn = create_connection(dbfile)
-    cur = conn.cursor()
-    sql = "INSERT INTO User(name, password, userType) VALUES (?,?,?)"
-    task = (Name, Password, Rank)
-    try:
-        cur.execute(sql, task)
-        conn.commit()
-    except Error as e:
-        print(e)
-        redirect("/user/new")
-    finally:
-        cur.close()
-        conn.close()
-    redirect("/")
-
-@app.route('/booking')
-def booking():
-    return app.send_static_file("booking.html")
 
 @app.route('/booking', methods=['POST'])
 def inputbooking():
@@ -263,20 +308,8 @@ def jsonReservationsPast():
                         "roomType": piece[4]})
     return json.dumps(thisreturnval)
 
-@app.route('/register')
-def signup():
-    if user is not "":
-        return redirect("/table")
-    else:
-        redirect("/login")
-
-@app.route('/register', methods=['POST'])
-def inputhome():
-    if user is not "":
-            Fname = request.forms.get('Fname')
-            Lname = request.forms.get('Lname')
-            Email = request.forms.get('Email')
 
 
+#initilize the controller.py and run the web-server
 app.secret_key = os.urandom(12)
 app.run(host='localhost', port=8080, debug=True)
