@@ -1,22 +1,14 @@
-#import bottle
-from bottle import route, run, get, post, static_file, request, redirect
+from flask import Flask, request
+from flask import *
 import sqlite3
 from sqlite3 import Error
-from cork import Cork
+from sqlalchemy import *
 import simplejson as json
 import datetime
-#from cork.backend import SQLiteBackend
 
-class User:
-    def __init__(self, username, password, rank):
-        self.username = username
-        self.password = password
-        self.rank = rank
-#SQBackend = SQLiteBackend('pythonsqlite.db')
-#aaa = Cork(backend = SQBackend)
-
-validusers = [User("admin", "password", "admin"), User("user", "pass", "client")]
 openDates = []
+engine = create_engine('sqlite:///pythonsqlite.db', echo = True)
+app = Flask(__name__)
 
 user = "";
 dbfile = "pythonsqlite.db"  #NAME OF DB FILE
@@ -34,42 +26,39 @@ def create_connection(db_file):
         print(e)
     return conn
 
-def validateUser(attemptedLogin):
-    for user in validusers:
-        if attemptedLogin.username == user.username and attemptedLogin.password == user.password:
-            return attemptedLogin
-            redirect("/")
-    print("Failed Login")
-    redirect('/login')
+@app.route('/')
+def home():
+    return app.send_static_file("default.html")
 
-def checkIfValidDate():
-    file = ''
-    with open("NOV_Avail_Dates", "r") as f:
-    	date = f.readline()
-    	x = date in availDates
-    	print(x)
+@app.route('/table')
+def table():
+    return app.send_static_file("table.html")
 
-@get('/')
-def default():
-    return static_file("default.html", root = 'HTML/')
-
-@get('/table')
-def default():
-    return static_file("table.html", root = 'HTML/')
-
-@get('/login')
+@app.route('/login')
 def login():
-    return static_file("login.html", root='HTML/')
+    return app.send_static_file("login.html")
 
-@post('/login')
-def inputlogin():
+@app.route('/login', methods=['POST'])
+def dologin():
     username = request.forms.get('username')
     password = request.forms.get('password')
-    print(username + " " + password)
-    user = validateUser(User(username, password, ""))
+
+    Session = sessionmaker(bind=engine)
+    s = Session()
+    query = s.query(User).filter(User.name.in_([username]), User.password)
+    result = query.first()
+    if result:
+        session['logged_in'] = True
+    else:
+        flash('wrong password')
     redirect('/')
 
-@get('/json/users')
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return home()
+
+@app.route('/json/users')
 def getAllUsers():
     returnval = []
     conn = create_connection(dbfile)
@@ -86,7 +75,7 @@ def getAllUsers():
                         "userType": user[3]})
     return json.dumps(returnval)
 
-@get('/json/user/<id>')
+@app.route('/json/user/<id>')
 def getUserById(id):
     conn = create_connection(dbfile)
     cur = conn.cursor()
@@ -102,11 +91,11 @@ def getUserById(id):
     return json.dumps(returnval)
 
 
-@get('/user/new')
+@app.route('/user/new')
 def newUser():
-    return static_file("newuser.html", root = 'HTML/')
+    return app.send_static_file("newuser.html")
 
-@post('/user/new')
+@app.route('/user/new', methods=['POST'])
 def inputNewUser():
     Name = request.forms.get('Name')
     Rank = request.forms.get('Rank')
@@ -126,11 +115,11 @@ def inputNewUser():
         conn.close()
     redirect("/")
 
-@get('/booking')
+@app.route('/booking')
 def booking():
-    return static_file("booking.html", root='HTML/')
+    return app.send_static_file("booking.html")
 
-@post('/booking')
+@app.route('/booking', methods=['POST'])
 def inputbooking():
     Name = request.forms.get('name')
     StartDate = request.forms.get('startDate')
@@ -150,7 +139,7 @@ def inputbooking():
         redirect("/booking")
     redirect("/")
 
-@get('/json/booking')
+@app.route('/json/booking')
 def jsonAllReservations():
     thisreturnval = []
     conn = create_connection(dbfile)
@@ -169,8 +158,8 @@ def jsonAllReservations():
                         "roomType": piece[4]})
     return json.dumps(thisreturnval)
 
-@get('/json/booking/future')
-def jsonAllReservations():
+@app.route('/json/booking/future')
+def jsonReservationsFuture():
     now = datetime.datetime.now()
     thisreturnval = []
     print(now)
@@ -190,8 +179,8 @@ def jsonAllReservations():
                         "roomType": piece[4]})
     return json.dumps(thisreturnval)
 
-@get('/json/booking/current')
-def jsonAllReservations():
+@app.route('/json/booking/current')
+def jsonReservationsCurrent():
     now = datetime.datetime.now()
     thisreturnval = []
     print(now)
@@ -211,8 +200,8 @@ def jsonAllReservations():
                         "roomType": piece[4]})
     return json.dumps(thisreturnval)
 
-@get('/json/booking/past')
-def jsonAllReservations():
+@app.route('/json/booking/past')
+def jsonReservationsPast():
     now = datetime.datetime.now()
     thisreturnval = []
     print(now)
@@ -233,25 +222,25 @@ def jsonAllReservations():
     return json.dumps(thisreturnval)
 
 
-@get('/dates/available')
+@app.route('/dates/available')
 def showDates():
     string = ""
     for date in openDates:
         string += "<div>" + date + "</div>"
     return string
 
-@get('/register')
-def home():
+@app.route('/register')
+def signup():
     if user is not "":
-        return static_file("table.html", root='HTML/')
+        return app.send_static_file("table.html")
     else:
         redirect("/login")
 
-@post('/register')
+@app.route('/register', methods=['POST'])
 def inputhome():
     if user is not "":
             Fname = request.forms.get('Fname')
             Lname = request.forms.get('Lname')
             Email = request.forms.get('Email')
 
-run(host='localhost', port=8080, debug=True)
+app.run(host='localhost', port=8080, debug=True)

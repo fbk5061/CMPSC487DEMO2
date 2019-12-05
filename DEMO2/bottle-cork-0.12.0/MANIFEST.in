@@ -1,4 +1,0 @@
-include tests/*.py
-include setup.py
-recursive-include examples *
-

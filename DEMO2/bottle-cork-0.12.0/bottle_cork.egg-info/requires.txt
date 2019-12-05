@@ -1,5 +1,0 @@
-Bottle
-pycrypto
-
-[scrypt]
-scrypt>=0.6.1
