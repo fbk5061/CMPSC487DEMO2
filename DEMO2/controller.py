@@ -2,18 +2,18 @@ from flask import Flask, request
 from flask import *
 import sqlite3
 from sqlite3 import Error
-from sqlalchemy import *
-from sqlalchemy.orm import sessionmaker
-from tabledef import *
+#from sqlalchemy import *
+#from sqlalchemy.orm import sessionmaker
+#from tabledef import *
 import os
 import simplejson as json
 import datetime
 
-engine = create_engine('sqlite:///pythonsqlite.db', echo = True)
+#engine = create_engine('sqlite:///pythonsqlite.db', echo = True)
 app = Flask(__name__)
 
-Session = sessionmaker(bind=engine)
-s = Session()
+#Session = sessionmaker(bind=engine)
+#s = Session()
 
 dbfile = "pythonsqlite.db"  #NAME OF DB FILE
 def create_connection(db_file):
@@ -30,19 +30,38 @@ def create_connection(db_file):
         print(e)
     return conn
 
+#This will initilize the session cookie with values that are logged in
+def sessioncreate():
+    if session.get('logged_in') is False:
+        print(session)
+        return ""
+    elif session.get('logged_in') is True:
+        print(session)
+        return ""
+    else:
+        session['logged_in'] = False
+        session['id'] = -1
+        session['username'] = ""
+        session['rank'] = ""
+        print(session)
+    return ""
+
 @app.route('/')
 def home():
+    sessioncreate()
     return app.send_static_file("default.html")
 
 @app.route('/table')
 def table():
+    sessioncreate()
     if session.get('logged_in') == False:
-        return login()
+        return redirect("login")
     else:
         return app.send_static_file("table.html")
 
 @app.route('/login')
 def login():
+    sessioncreate()
     return app.send_static_file("login.html")
 
 @app.route('/login', methods=['POST'])
@@ -50,35 +69,36 @@ def dologin():
     username = request.form['username']
     password = request.form['password']
 
-    query = s.query(User).filter(User.name.in_([username]), User.password.in_([password]))
-    result = query.first()
-    if result:
-        conn = create_connection(dbfile)
-        cur = conn.cursor()
-        sql = "Select * from User where name = '" + username + "'"
-        cur.execute(sql)
-        data = cur.fetchone()
-        cur.close()
-        conn.close()
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "Select * from User where name is '" + username + "' and password is '" + password +"'"
+    cur.execute(sql)
+    data = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    if data[0] > 0:
         session['logged_in'] = True
+        session['id'] = data[0]
         session['username'] = username
         session['rank'] = data[3]
-        return table()
+        return redirect("/table")
     else:
         flash('wrong password')
-        return login()
+        return redirect("/login")
 
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
+    session['id'] = -1
     session['username'] = ""
     session['rank'] = ""
-    return home()
+    return redirect("/")
 
 @app.route("/session")
 def testroute():
     print(session)
-    return "HI"
+    return ""
 
 @app.route('/json/users')
 def getAllUsers():
@@ -246,9 +266,9 @@ def jsonReservationsPast():
 @app.route('/register')
 def signup():
     if user is not "":
-        return table()
+        return redirect("/table")
     else:
-        login()
+        redirect("/login")
 
 @app.route('/register', methods=['POST'])
 def inputhome():
