@@ -13,7 +13,6 @@ dbfile = "pythonsqlite.db"  #NAME OF DB FILE
 #   Various functions that help the below methods
 #
 
-
 def create_connection(db_file):
     """ create a database connection to the SQLite database
         specified by db_file
