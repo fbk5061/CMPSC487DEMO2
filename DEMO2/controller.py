@@ -38,18 +38,17 @@ def sessioncreate():
         session['id'] = -1
         session['username'] = ""
         session['rank'] = ""
+        session['returnval'] = ""
     return ""
 
 def isAdmin():
-    value = session.get('rank')
-    if value is "Admin":
+    if session['rank'] == 'Admin':
         return True
     else:
         return False
 
 def isFaculty():
-    value = session.get('rank')
-    if value is "Faculty":
+    if session['rank'] == "Faculty":
         return True
     else:
         return False
@@ -57,7 +56,6 @@ def isFaculty():
 # checks to see if the user is logged in
 def isLoggedIn():
     sessioncreate()
-    #print(session)
     if session.get('logged_in') is True:
         return True
     else:
@@ -69,7 +67,7 @@ def requireLogin(returnval):
     if isLoggedIn():
         return app.send_static_file(returnval)
     else:
-        session['returnvalue'] = returnval
+        session['returnval'] = returnval
         return redirect('/login')
 
 def requireAdminLogin(adminpage, nonadminpage):
@@ -79,7 +77,7 @@ def requireAdminLogin(adminpage, nonadminpage):
         else:
             return app.send_static_file(nonadminpage)
     else:
-        session['returnvalue'] = ""
+        session['returnval'] = ""
         return redirect('/login')
 
 #
@@ -148,12 +146,12 @@ def dologin():
         session['id'] = data[0]
         session['username'] = username
         session['rank'] = data[3]
-        returnval = session['returnvalue']
+        returnval = session['returnval']
         session['returnval'] = ""
         if returnval is None:
-            return app.send_static_file('/')
+            return redirect('/')
         if returnval is "":
-            return app.send_static_file('/')
+            return redirect('/')
         return app.send_static_file(returnval)
     else:
         flash('wrong password')
