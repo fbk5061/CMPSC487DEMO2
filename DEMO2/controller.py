@@ -279,6 +279,23 @@ def jsonReservationsFuture():
                         "roomType": piece[4]})
     return json.dumps(thisreturnval)
 
+@app.route('/json/booking/user/<id>')
+def jsonAllReserverationsById(id):
+	thisreturnval = []
+	conn = create_connection(dbfile)
+	cur = conn.cursor()
+	sql = "SELECT * FROM Reservations WHERE customerId = " +id
+	cur.execute(sql)
+	data = cur.fetchall()
+	cur.close()
+	conn.close()
+	for piece in data:
+		thisreturnval.append({"id": piece[1],
+				     "startDate": piece[2],
+				     "endDate": piece[3],
+				     "roomType": piece[4]})
+	return json.dumps(thisreturnval)
+
 @app.route('/json/booking/current')
 def jsonReservationsCurrent():
     now = datetime.datetime.now()
