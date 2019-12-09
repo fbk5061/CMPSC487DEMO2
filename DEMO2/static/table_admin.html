@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <style>
+            /* Style the tab content */
+            .tabcontent {
+              color: black;
+              display: none;
+              padding: 80px;
+              text-align: center;
+            }
+            .tab{
+                text-align: center;
+            }
+        </style>
+    </head>
+      <div class="container">
+        <div class="container jumbotron mt-2 bg-info">
+          <h1 class="text-center">Reservation Data</h1>
+        </div>
+
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Past')">Past</button>
+            <button class="tablinks" onclick="openTab(event, 'Present')">Present</button>
+            <button class="tablinks" onclick="openTab(event, 'Future')">Future</button>
+          </div>
+
+          <div id="Past" class="tabcontent">
+            <h3>Past Reservation</h3>
+            <table class= "table table-bordered table-striped table-dark table-hover ml-0 mr-0">
+
+                <thead>
+                    <tr>
+                      <th scope="col">Customer Name</th>
+                      <th scope="col">Start Date</th>
+                      <th scope="col">End Date</th>
+                      <th scope="col">Room Type</th>
+                      <th scope="col">Cost</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                <tr>
+                  <th scope="row">Fery</th>
+                  <td>Nov 23, 2019</td>
+                  <td>Nov 24, 2019</td>
+                  <td>Single</td>
+                  <td>$45.33</td>
+                </tr>
+                <tr>
+                    <th scope="row">Foram</th>
+                    <td>Nov 25, 2019</td>
+                    <td>Nov 26, 2019</td>
+                    <td>Queen</td>
+                    <td>$55.74</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Samuel</th>
+                    <td>Nov 28, 2019</td>
+                    <td>Nov 29, 2019</td>
+                    <td>King</td>
+                    <td>$60.84</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Joshua</th>
+                    <td>Nov 28, 2019</td>
+                    <td>Nov 29, 2019</td>
+                    <td>Single</td>
+                    <td>$45.33</td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
+          <div id="Present" class="tabcontent">
+            <h3>Present Reservation</h3>
+            <table class= "table table-bordered table-striped table-dark table-hover ml-0 mr-0">
+                <thead>
+                    <tr>
+                      <th scope="col">Customer Name</th>
+                      <th scope="col">Start Date</th>
+                      <th scope="col">End Date</th>
+                      <th scope="col">Room Type</th>
+                      <th scope="col">Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Dhruvil</th>
+                    <td>Nov 27, 2019</td>
+                    <td>Nov 28, 2019</td>
+                    <td>King</td>
+                    <td>$60.84</td>
+                </tr>
+                <tr>
+                  <th scope="row">Fery</th>
+                  <td>Nov 23, 2019</td>
+                  <td>Nov 24, 2019</td>
+                  <td>Single</td>
+                  <td>$45.33</td>
+                </tr>
+                <tr>
+                    <th scope="row">Joshua</th>
+                    <td>Nov 28, 2019</td>
+                    <td>Nov 29, 2019</td>
+                    <td>Single</td>
+                    <td>$45.33</td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
+          <div id="Future" class="tabcontent">
+            <h3>Future Reservation</h3>
+            <table class= "table table-bordered table-striped table-dark table-hover ml-0 mr-0">
+                <thead>
+                    <tr>
+                      <th scope="col">Customer Name</th>
+                      <th scope="col">Start Date</th>
+                      <th scope="col">End Date</th>
+                      <th scope="col">Room Type</th>
+                      <th scope="col">Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Samuel</th>
+                    <td>Nov 28, 2019</td>
+                    <td>Nov 29, 2019</td>
+                    <td>King</td>
+                    <td>$60.84</td>
+                </tr>
+                <tr>
+                    <th scope="row">Foram</th>
+                    <td>Nov 25, 2019</td>
+                    <td>Nov 26, 2019</td>
+                    <td>Queen</td>
+                    <td>$55.74</td>
+                  </tr>
+                <tr>
+                   <th scope="row">Fery</th>
+                   <td>Nov 23, 2019</td>
+                   <td>Nov 24, 2019</td>
+                   <td>Single</td>
+                   <td>$45.33</td>
+                </tr>
+                </tbody>
+            </table>
+          </div>
+          <script>
+            function openTab(evt, Time) {
+              var i, tabcontent, tablinks;
+              tabcontent = document.getElementsByClassName("tabcontent");
+              for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+              }
+              tablinks = document.getElementsByClassName("tablinks");
+              for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+              }
+              document.getElementById(Time).style.display = "block";
+              evt.currentTarget.className += " active";
+            }
+            </script>
+
+        <div class="container">
+        <table class="table table-bordered table-striped table-dark table-hover ml-0 mr-0">
+    </table>
+    </div>
+      </div>
+      <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
