@@ -79,7 +79,7 @@ def requireAdminLogin(adminpage, nonadminpage):
         else:
             return app.send_static_file(nonadminpage)
     else:
-        #session['returnvalue'] = "nonadminpage"
+        session['returnvalue'] = ""
         return redirect('/login')
 
 #
