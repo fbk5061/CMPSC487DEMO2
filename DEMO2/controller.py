@@ -72,6 +72,16 @@ def requireLogin(returnval):
         session['returnvalue'] = returnval
         return redirect('/login')
 
+def requireAdminLogin(adminpage, nonadminpage):
+    if isLoggedIn():
+        if isAdmin():
+            return app.send_static_file(adminpage)
+        else:
+            return app.send_static_file(nonadminpage)
+    else:
+        #session['returnvalue'] = "nonadminpage"
+        return redirect('/login')
+
 #
 # STATIC PAGES
 #
@@ -85,7 +95,7 @@ def home():
 
 @app.route('/table')
 def table():
-    return requireLogin("table.html")
+    return requireAdminLogin("table_admin.html", "table_user.html")
 
 @app.route('/login')
 def login():
