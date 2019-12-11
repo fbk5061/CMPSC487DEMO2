@@ -1,233 +1,112 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <style>
-            /* Style the tab content */
-            .tabcontent {
-              color: black;
-              display: none;
-              padding: 80px;
-              text-align: center;
-            }
-            .tab{
-                text-align: center;
-            }
-        </style>
-    </head>
-      <div class="container">
-        <div class="container jumbotron mt-2 bg-info">
-          <h1 class="text-center">Reservation Data</h1>
-        </div>
 
-        <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'Past')">Past</button>
-            <button class="tablinks" onclick="openTab(event, 'Present')">Present</button>
-            <button class="tablinks" onclick="openTab(event, 'Future')">Future</button>
-          </div>
-
-          <div id="Past" class="tabcontent">
-            <h3>Past Reservation</h3>
-            <table class= "table table-bordered table-striped table-dark table-hover ml-0 mr-0">
-
-                <thead>
-                    <tr>
-                      <th scope="col">Customer Name</th>
-                      <th scope="col">Start Date</th>
-                      <th scope="col">End Date</th>
-                      <th scope="col">Room Type</th>
-                      <th scope="col">Cost</th>
-                    </tr>
-                    <ul class="nav nav-tabs">
-                      <li class="nav-item">
-                        <a class="nav-link " href="#">Customer Name</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link " href="#">Start Date</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">End Date</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Room Type</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link Cost" href="#" tabindex="-1" aria-cost="true">Cost
-                      </li>
-                    </ul>
-                </thead>
-                <tbody>
-                <tr>
-                  <th scope="row">Fery</th>
-                  <td>Nov 23, 2019</td>
-                  <td>Nov 24, 2019</td>
-                  <td>Single</td>
-                  <td>$45.33</td>
-                </tr>
-                <tr>
-                    <th scope="row">Foram</th>
-                    <td>Nov 25, 2019</td>
-                    <td>Nov 26, 2019</td>
-                    <td>Queen</td>
-                    <td>$55.74</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Samuel</th>
-                    <td>Nov 28, 2019</td>
-                    <td>Nov 29, 2019</td>
-                    <td>King</td>
-                    <td>$60.84</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Joshua</th>
-                    <td>Nov 28, 2019</td>
-                    <td>Nov 29, 2019</td>
-                    <td>Single</td>
-                    <td>$45.33</td>
-                  </tr>
-                </tbody>
-            </table>
-          </div>
-          <div id="Present" class="tabcontent">
-            <h3>Present Reservation</h3>
-            <table class= "table table-bordered table-striped table-dark table-hover ml-0 mr-0">
-                <thead>
-                    <tr>
-                      <th scope="col">Customer Name</th>
-                      <th scope="col">Start Date</th>
-                      <th scope="col">End Date</th>
-                      <th scope="col">Room Type</th>
-                      <th scope="col">Cost</th>
-                    </tr>
-                    <ul class="nav nav-tabs">
-                      <li class="nav-item">
-                        <a class="nav-link " href="#">Customer Name</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link " href="#">Start Date</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">End Date</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Room Type</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link Cost" href="#" tabindex="-1" aria-cost="true">Cost
-                      </li>
-                    </ul>
-                </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">Dhruvil</th>
-                    <td>Nov 27, 2019</td>
-                    <td>Nov 28, 2019</td>
-                    <td>King</td>
-                    <td>$60.84</td>
-                </tr>
-                <tr>
-                  <th scope="row">Fery</th>
-                  <td>Nov 23, 2019</td>
-                  <td>Nov 24, 2019</td>
-                  <td>Single</td>
-                  <td>$45.33</td>
-                </tr>
-                <tr>
-                    <th scope="row">Joshua</th>
-                    <td>Nov 28, 2019</td>
-                    <td>Nov 29, 2019</td>
-                    <td>Single</td>
-                    <td>$45.33</td>
-                  </tr>
-                </tbody>
-            </table>
-          </div>
-          <div id="Future" class="tabcontent">
-            <h3>Future Reservation</h3>
-            <table class= "table table-bordered table-striped table-dark table-hover ml-0 mr-0">
-                <thead>
-                    <tr>
-                      <th scope="col">Customer Name</th>
-                      <th scope="col">Start Date</th>
-                      <th scope="col">End Date</th>
-                      <th scope="col">Room Type</th>
-                      <th scope="col">Cost</th>
-                    </tr>
-                    <ul class="nav nav-tabs">
-                      <li class="nav-item">
-                        <a class="nav-link " href="#">Customer Name</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link " href="#">Start Date</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">End Date</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Room Type</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link Cost" href="#" tabindex="-1" aria-cost="true">Cost
-                      </li>
-                    </ul>
-                </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">Samuel</th>
-                    <td>Nov 28, 2019</td>
-                    <td>Nov 29, 2019</td>
-                    <td>King</td>
-                    <td>$60.84</td>
-                </tr>
-                <tr>
-                    <th scope="row">Foram</th>
-                    <td>Nov 25, 2019</td>
-                    <td>Nov 26, 2019</td>
-                    <td>Queen</td>
-                    <td>$55.74</td>
-                  </tr>
-                <tr>
-                   <th scope="row">Fery</th>
-                   <td>Nov 23, 2019</td>
-                   <td>Nov 24, 2019</td>
-                   <td>Single</td>
-                   <td>$45.33</td>
-                </tr>
-                  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        
-        </tbody>
-                </tbody>
-            </table>
-          </div>
-          <script>
-            function openTab(evt, Time) {
-              var i, tabcontent, tablinks;
-              tabcontent = document.getElementsByClassName("tabcontent");
-              for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-              }
-              tablinks = document.getElementsByClassName("tablinks");
-              for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-              }
-              document.getElementById(Time).style.display = "block";
-              evt.currentTarget.className += " active";
-            }
-            </script>
-
-        <div class="container">
-        <table class="table table-bordered table-striped table-dark table-hover ml-0 mr-0">
-    </table>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<div class="container">
+  <div class="container jumbotron mt-2 bg-info">
+    <h1 class="text-center">Reservation Data</h1>
+  </div>
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Past</a>
+      <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Present</a>
+      <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Future</a>
     </div>
-      </div>
-      <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+      <table class="table table-bordered table-striped table-dark table-hover ml-0 mr-0">
+        <thead>
+          <tr>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Start Date</th>
+            <th scope="col">End Date</th>
+            <th scope="col">Room Type</th>
+            <th scope="col">Cost</th>
+          </tr>
+        </thead>
+        <tbody id="pasttextarea" name="pasttextarea">
+    </tbody>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+    <table class="table table-bordered table-striped table-dark table-hover ml-0 mr-0">
+      <thead>
+        <tr>
+          <th scope="col">Customer Name</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+          <th scope="col">Room Type</th>
+          <th scope="col">Cost</th>
+        </tr>
+      </thead>
+      <tbody id="presenttextarea" name="presenttextarea">
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+    <table class="table table-bordered table-striped table-dark table-hover ml-0 mr-0">
+      <thead>
+        <tr>
+          <th scope="col">Customer Name</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+          <th scope="col">Room Type</th>
+          <th scope="col">Cost</th>
+        </tr>
+      </thead>
+      <tbody id="futuretextarea" name="futuretextarea">
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $.get("/json/booking/past", function(data) {
+      data = JSON.parse(data);
+      console.log(data);
+      var returnstring = "";
+      for (var counter = 0; counter < data.length; counter++) {
+        returnstring += '<tr><th scope="row">' + data[counter].customerId + '</th><td>' + data[counter].startDate + '</td><td>' + data[counter].endDate + '</td><td>' + data[counter].roomType + '</td><td>' + data[counter].price + '</td></tr>';
+      }
+      //returnstring += "</tbody>"
+      $("#pasttextarea").append(returnstring);
+    });
+    $.get("/json/booking/current", function(data) {
+      data = JSON.parse(data);
+      console.log(data);
+      var returnstring = "";
+      for (var counter = 0; counter < data.length; counter++) {
+        returnstring += '<tr><th scope="row">' + data[counter].customerId + '</th><td>' + data[counter].startDate + '</td><td>' + data[counter].endDate + '</td><td>' + data[counter].roomType + '</td><td>' + data[counter].price + '</td></tr>';
+      }
+      if(returnstring.length == 0) returnstring = '<tr>NO RESULTS</tr>'
+      $("#presenttextarea").append(returnstring);
+    });
+    $.get("/json/booking/future", function(data) {
+      data = JSON.parse(data);
+      console.log(data);
+      var returnstring = "";
+      for (var counter = 0; counter < data.length; counter++) {
+        returnstring += '<tr><th scope="row">' + data[counter].customerId + '</th><td>' + data[counter].startDate + '</td><td>' + data[counter].endDate + '</td><td>' + data[counter].roomType + '</td><td>' + data[counter].price + '</td></tr>';
+      }
+      if(returnstring.length = 0) returnstring = '<tr>NO RESULTS</th></tr>'
+      $("#futuretextarea").append(returnstring);
+    });
+  });
+</script>
+</body>
 </html>

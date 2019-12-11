@@ -80,12 +80,27 @@ def requireAdminLogin(adminpage, nonadminpage):
         session['returnval'] = ""
         return redirect('/login')
 
+def getuserName(id, users):
+    for user in users:
+        if user[0] == id:
+            return user[1]
+    return "null"
+
+def getPrice(roomType, types):
+    for type in types:
+        if type[0] == roomType:
+            return type[1]
+    return "null"
 #
 # STATIC PAGES
 #
 @app.route('/')
 def redirectfromdefaultpage():
     return redirect('/home')
+
+@app.route('/test')
+def testingthingspleaseremembertodelete():
+    return app.send_static_file("table.old.html")
 
 @app.route('/home')
 def home():
@@ -97,6 +112,7 @@ def table():
 
 @app.route('/login')
 def login():
+    sessioncreate()
     return app.send_static_file("login.html")
 
 @app.route('/booking')
@@ -205,6 +221,23 @@ def inputNewUser():
 #   Json routes -> to be changed to be more secure eventually
 #
 
+@app.route('/json/roomTypes')
+def getRoomTypes():
+    returnval = []
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "Select * from roomType"
+    cur.execute(sql)
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    for user in data:
+        returnval.append({"id": user[0],
+                        "price": user[1],
+                        "quantity": user[2]})
+    return json.dumps(returnval)
+
+
 @app.route('/json/users')
 def getAllUsers():
     returnval = []
@@ -248,7 +281,6 @@ def jsonAllReservations():
     cur.close()
     conn.close()
     for piece in data:
-        #customer = json.loads(getUserById(str(piece[0])))
         thisreturnval.append({"id": piece[0],
                         "customerId": piece[1],
                         "startDate": piece[2],
@@ -266,33 +298,45 @@ def jsonReservationsFuture():
     sql = "Select * from Reservations where startDate > DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"');"
     cur.execute(sql)
     data = cur.fetchall()
+    cur.execute("Select * from User")
+    users = cur.fetchall()
+    cur.execute("Select * from roomType")
+    types = cur.fetchall()
     cur.close()
     conn.close()
     for piece in data:
-        #customer = json.loads(getUserById(str(piece[0])))
+        name = getuserName(piece[1], users)
+        price = getPrice(piece[4], types)
         thisreturnval.append({"id": piece[0],
-                        "customerId": piece[1],
+                        "customerId": name,
                         "startDate": piece[2],
                         "endDate": piece[3],
-                        "roomType": piece[4]})
+                        "roomType": piece[4],
+                        "price": price})
     return json.dumps(thisreturnval)
 
-@app.route('/json/booking/user/<id>')
-def jsonAllReserverationsById(id):
-	thisreturnval = []
-	conn = create_connection(dbfile)
-	cur = conn.cursor()
-	sql = "SELECT * FROM Reservations WHERE customerId = " +id
-	cur.execute(sql)
-	data = cur.fetchall()
-	cur.close()
-	conn.close()
-	for piece in data:
-		thisreturnval.append({"id": piece[1],
+@app.route('/json/booking/user')
+def jsonAllReserverationsById():
+    id = session['id']
+    thisreturnval = []
+    conn = create_connection(dbfile)
+    cur = conn.cursor()
+    sql = "SELECT * FROM Reservations WHERE customerId = " + str(id)
+    cur.execute(sql)
+    data = cur.fetchall()
+    cur.execute("Select * from roomType")
+    types = cur.fetchall()
+    cur.close()
+    conn.close()
+    for piece in data:
+        price = getPrice(piece[4], types)
+        thisreturnval.append({"id": piece[0],
 				     "startDate": piece[2],
 				     "endDate": piece[3],
-				     "roomType": piece[4]})
-	return json.dumps(thisreturnval)
+				     "roomType": piece[4],
+                     "price" : price})
+    return json.dumps(thisreturnval)
+
 
 @app.route('/json/booking/current')
 def jsonReservationsCurrent():
@@ -304,15 +348,21 @@ def jsonReservationsCurrent():
     sql = "Select * from Reservations where startDate <= DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"') and endDate >= DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"');"
     cur.execute(sql)
     data = cur.fetchall()
+    cur.execute("Select * from User")
+    users = cur.fetchall()
+    cur.execute("Select * from roomType")
+    types = cur.fetchall()
     cur.close()
     conn.close()
     for piece in data:
-        #customer = json.loads(getUserById(str(piece[0])))
+        name = getuserName(piece[1], users)
+        price = getPrice(piece[4], types)
         thisreturnval.append({"id": piece[0],
-                        "customerId": piece[1],
+                        "customerId": name,
                         "startDate": piece[2],
                         "endDate": piece[3],
-                        "roomType": piece[4]})
+                        "roomType": piece[4],
+                        "price": price})
     return json.dumps(thisreturnval)
 
 @app.route('/json/booking/past')
@@ -325,17 +375,22 @@ def jsonReservationsPast():
     sql = "Select * from Reservations where endDate < DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"');"
     cur.execute(sql)
     data = cur.fetchall()
+    cur.execute("Select * from User")
+    users = cur.fetchall()
+    cur.execute("Select * from roomType")
+    types = cur.fetchall()
     cur.close()
     conn.close()
     for piece in data:
-        #customer = json.loads(getUserById(str(piece[0])))
+        name = getuserName(piece[1], users)
+        price = getPrice(piece[4], types)
         thisreturnval.append({"id": piece[0],
-                        "customerId": piece[1],
+                        "customerId": name,
                         "startDate": piece[2],
                         "endDate": piece[3],
-                        "roomType": piece[4]})
+                        "roomType": piece[4],
+                        "price": price})
     return json.dumps(thisreturnval)
-
 
 
 #initilize the controller.py and run the web-server

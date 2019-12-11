@@ -17,87 +17,42 @@
       </div>
       <div class="container">
       <table class= "table table-bordered table-striped table-dark table-hover ml-0 mr-0">
-    
-    
+
+
         <thead>
             <tr>
-             
+
               <th scope="col">Start Date</th>
               <th scope="col">End Date</th>
               <th scope="col">Room Type</th>
               <th scope="col">Cost</th>
-              
-              <ul class="nav nav-tabs">
-                <li scope="nav-item">
-                  <a class="nav-link " href="#">Start Date</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">End Date</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Room Type</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link Cost" href="#" tabindex="-1" aria-cost="true">Cost
-                </li>
-              </ul>
-            </tr>
-           
+
         </thead>
-        <tbody>
-        <tr>
-          <td>June 13, 2019</td>
-          <td>Nov 24, 2019</td>
-          <td>Single</td>
-          <td>$45.33</td>
-        </tr>
-        <tr>
-            <td>August 25, 2019</td>
-            <td>Nov 26, 2019</td>
-            <td>Queen</td>
-            <td>$55.74</td>
-          </tr>
+        <tbody id = "tabletext" name = "tabletext">
 
-          <tr>
-          
-            <td>Nov 28, 2019</td>
-            <td>Nov 29, 2019</td>
-            <td>King</td>
-            <td>$60.84</td>
-          </tr>
-
-          <tr>
-            <td>Dec 10, 2019</td>
-            <td>Nov 29, 2019</td>
-            <td>Single</td>
-            <td>$45.33</td>
-          </tr>
-          <tr>
-            <td>Dec 21, 2019</td>
-            <td>Nov 28, 2019</td>
-            <td>King</td>
-            <td>$60.84</td>
-        </tr>
-        <tr>
-            <td>Jan 27, 2019</td>
-            <td>Nov 28, 2019</td>
-            <td>King</td>
-            <td>$60.84</td>
-        </tr>
-          
-
-
-
+        </tbody>
   </table>
   </div>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="text/javascript">
+    $(document).ready(function() {
+      $.get("/json/booking/user", function(data) {
+        data = JSON.parse(data);
+        console.log(data);
+        var returnstring = "";
+        for (var counter = 0; counter < data.length; counter++) {
+          returnstring += '<tr><td>' + data[counter].startDate + '</td><td>' + data[counter].endDate + '</td><td>' + data[counter].roomType + '</td><td>' + data[counter].price + '</td></tr>';
+        }
+        //returnstring += "</tbody>"
+        $("#tabletext").append(returnstring);
+      });
+    });
     </script>
   </body>
 </html>
-
