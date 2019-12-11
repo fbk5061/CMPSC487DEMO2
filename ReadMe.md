@@ -8,7 +8,7 @@ How to download, install and run your code?
 
 testing accounts:
 Admin/password -> Admin User
-Jeremy Blum/You'llNeverGuessMyPasswords -> Customer User
+Jeremy Blum/hi -> Customer User
 Ben/IOnlyPunchKittens -> Faculty User
 Chang/YouWillFail -> Admin User
 
