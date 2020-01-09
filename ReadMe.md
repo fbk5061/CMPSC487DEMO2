@@ -13,6 +13,3 @@ Jeremy Blum/hi -> Customer User
 Ben/IOnlyPunchKittens -> Faculty User
 
 QA team will need to run your code and test against the black-box test cases they generated.
-
-Link of the GitHub source code:
-https://github.com/ATrulyRandomGuy/CMPSC487DEMO2/tree/master/DEMO2
