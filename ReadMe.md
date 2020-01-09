@@ -9,12 +9,5 @@ How to download, install and run your code?
 
 testing accounts:
 Admin/password -> Admin User
-<<<<<<< HEAD
 Customer/password -> Customer User
 Faculty/password -> Faculty User
-=======
-Jeremy Blum/hi -> Customer User
-Ben/IOnlyPunchKittens -> Faculty User
-
-QA team will need to run your code and test against the black-box test cases they generated.
->>>>>>> ec47c6b2c60c00751a8e3742cca3069019744097
