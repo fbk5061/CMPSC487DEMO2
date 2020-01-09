@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -34,6 +33,8 @@
         <tbody id="pasttextarea" name="pasttextarea">
     </tbody>
     </table>
+    <div class="text-center"id="pasterror" name="pasterror">
+    </div>
   </div>
   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
     <table class="table table-bordered table-striped table-dark table-hover ml-0 mr-0">
@@ -49,6 +50,8 @@
       <tbody id="presenttextarea" name="presenttextarea">
       </tbody>
     </table>
+    <div class="text-center"id="presenterror" name="presenterror">
+    </div>
   </div>
   <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
     <table class="table table-bordered table-striped table-dark table-hover ml-0 mr-0">
@@ -64,6 +67,8 @@
       <tbody id="futuretextarea" name="futuretextarea">
       </tbody>
     </table>
+    <div class="text-center"id="futureerror" name="futureerror">
+    </div>
   </div>
 </div>
 </div>
@@ -83,8 +88,13 @@
       for (var counter = 0; counter < data.length; counter++) {
         returnstring += '<tr><th scope="row">' + data[counter].customerId + '</th><td>' + data[counter].startDate + '</td><td>' + data[counter].endDate + '</td><td>' + data[counter].roomType + '</td><td>' + data[counter].price + '</td></tr>';
       }
+      if(data.length == 0){
+        $("#pasterror").append("NO RESERVATIONS FOUND");
+      }
+      else{
+        $("#pasttextarea").append(returnstring);
+      }
       //returnstring += "</tbody>"
-      $("#pasttextarea").append(returnstring);
     });
     $.get("/json/booking/current", function(data) {
       data = JSON.parse(data);
@@ -93,8 +103,12 @@
       for (var counter = 0; counter < data.length; counter++) {
         returnstring += '<tr><th scope="row">' + data[counter].customerId + '</th><td>' + data[counter].startDate + '</td><td>' + data[counter].endDate + '</td><td>' + data[counter].roomType + '</td><td>' + data[counter].price + '</td></tr>';
       }
-      if(returnstring.length == 0) returnstring = '<tr>NO RESULTS</tr>'
-      $("#presenttextarea").append(returnstring);
+      if(returnstring.length == 0){
+        $("#presenterror").append("NO RESERVATIONS FOUND");
+      }
+      else{
+        $("#presenttextarea").append(returnstring);
+      }
     });
     $.get("/json/booking/future", function(data) {
       data = JSON.parse(data);
@@ -103,8 +117,13 @@
       for (var counter = 0; counter < data.length; counter++) {
         returnstring += '<tr><th scope="row">' + data[counter].customerId + '</th><td>' + data[counter].startDate + '</td><td>' + data[counter].endDate + '</td><td>' + data[counter].roomType + '</td><td>' + data[counter].price + '</td></tr>';
       }
-      if(returnstring.length = 0) returnstring = '<tr>NO RESULTS</th></tr>'
-      $("#futuretextarea").append(returnstring);
+      if(returnstring.length == 0){
+        $("#futureerror").append('NO RESERVATIONS FOUND');
+      }
+      else{
+        $("#futuretextarea").append(returnstring);
+
+      }
     });
   });
 </script>

@@ -106,9 +106,13 @@ def testingthingspleaseremembertodelete():
 def home():
     return app.send_static_file("default.html")
 
-@app.route('/table')
-def table():
+@app.route('/admin/table')
+def admintable():
     return requireAdminLogin("table_admin.html", "table_user.html")
+
+@app.route('/my/table')
+def mytable():
+    return requireLogin("table_user.html")
 
 @app.route('/login')
 def login():
@@ -290,12 +294,11 @@ def jsonAllReservations():
 
 @app.route('/json/booking/future')
 def jsonReservationsFuture():
-    now = datetime.datetime.now()
+    now = datetime.date.today()
     thisreturnval = []
-    print(now)
     conn = create_connection(dbfile)
     cur = conn.cursor()
-    sql = "Select * from Reservations where startDate > DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"');"
+    sql = "Select * from Reservations where startDate > Date('"+str(now)+"');"
     cur.execute(sql)
     data = cur.fetchall()
     cur.execute("Select * from User")
@@ -340,12 +343,11 @@ def jsonAllReserverationsById():
 
 @app.route('/json/booking/current')
 def jsonReservationsCurrent():
-    now = datetime.datetime.now()
+    now = datetime.date.today()
     thisreturnval = []
-    print(now)
     conn = create_connection(dbfile)
     cur = conn.cursor()
-    sql = "Select * from Reservations where startDate <= DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"') and endDate >= DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"');"
+    sql = "Select * from Reservations where startDate <= Date('"+str(now)+"') and endDate >= Date('"+str(now)+"');"
     cur.execute(sql)
     data = cur.fetchall()
     cur.execute("Select * from User")
@@ -367,14 +369,13 @@ def jsonReservationsCurrent():
 
 @app.route('/json/booking/past')
 def jsonReservationsPast():
-    now = datetime.datetime.now()
+    now = datetime.date.today()
     thisreturnval = []
-    print(now)
     conn = create_connection(dbfile)
     cur = conn.cursor()
-    sql = "Select * from Reservations where endDate < DateTime('"+str(now.year) + "-" + str(now.month) +"-"+str(now.day) + " 00:00:00"+"');"
-    cur.execute(sql)
+    cur.execute("Select * from Reservations where endDate < Date('"+str(now)+"');")
     data = cur.fetchall()
+    print(data)
     cur.execute("Select * from User")
     users = cur.fetchall()
     cur.execute("Select * from roomType")
@@ -395,4 +396,4 @@ def jsonReservationsPast():
 
 #initilize the controller.py and run the web-server
 app.secret_key = os.urandom(12)
-app.run(host='localhost', port=8080, debug=True)
+app.run(host='localhost', port=8080, debug=False)
